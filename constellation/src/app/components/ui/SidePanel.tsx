@@ -15,7 +15,7 @@ const SidePanel = ({ isOpen, setIsOpen, children }: SidePanelProps) => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed right-0 top-0 bottom-0 bg-white shadow-lg z-40 w-[300px] max-w-full flex flex-col"
+            className="fixed right-0 top-0 bottom-0 bg-white shadow-lg z-40 w-[400px] max-w-full flex flex-col"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}

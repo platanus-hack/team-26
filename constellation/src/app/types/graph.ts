@@ -17,6 +17,7 @@ export type Metadata = {
   description: string;
   results: string;
   embeding: [number, number];
+  cluster: number;
 };
 
 export type CosmosInputNode = {

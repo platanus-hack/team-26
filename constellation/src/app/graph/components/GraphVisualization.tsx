@@ -1,12 +1,21 @@
 "use client";
-import {
-  CosmographProvider,
-  Cosmograph,
-  CosmographSearch,
-} from "@cosmograph/react";
+import { CosmographProvider, Cosmograph } from "@cosmograph/react";
 import { Node, Link } from "@/app/types/graph";
 import { useState } from "react";
 import NodeSidePanel from "./NodeSidePanel";
+import SearchBar from "./SearchBar";
+
+const goldenRatioConjugate = 0.618033988749895;
+
+const generateColor = (index: number) => {
+  const hue = (index * goldenRatioConjugate) % 1;
+  return `hsl(${hue * 360}, 50%, 30%)`;
+};
+
+const getNodeColor = (node: Node) => {
+  const cluster = node.metadata?.cluster;
+  return cluster !== undefined ? generateColor(cluster) : "gray";
+};
 
 export function GraphVisualization({
   nodes,
@@ -27,32 +36,22 @@ export function GraphVisualization({
 
   return (
     <CosmographProvider nodes={nodes} links={links}>
-      <CosmographSearch
-        accessors={[
-          {
-            label: "title",
-            accessor: (node: Node) => node.metadata?.title || "",
-          },
-          {
-            label: "description",
-            accessor: (node: Node) => node.metadata?.description || "",
-          },
-        ]}
-        maxVisibleItems={5}
-      />
+      <SearchBar />
       <Cosmograph
         nodeSize={1}
         linkWidth={1}
+        nodeColor={getNodeColor}
         hoveredNodeRingColor={"red"}
-        focusedNodeRingColor={"yellow"}
         style={{ width: "100%", height: "100vh" }}
-        simulationFriction={0.05}
+        simulationFriction={0.03}
         simulationLinkSpring={0.5}
         simulationRepulsion={0.5}
         simulationLinkDistance={2.0}
+        simulationGravity={0.5}
         showDynamicLabels={false}
         renderLinks={true}
         onClick={handleNodeClick}
+        backgroundColor="#191919"
       />
       {selectedNode && (
         <NodeSidePanel
