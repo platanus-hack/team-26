@@ -6,7 +6,7 @@ import {
 } from "@cosmograph/react";
 import { Node, Link } from "@/app/types/graph";
 import { useState } from "react";
-import NodeModal from "./NodeModal";
+import NodeSidePanel from "./NodeSidePanel";
 
 export function GraphVisualization({
   nodes,
@@ -27,22 +27,35 @@ export function GraphVisualization({
 
   return (
     <CosmographProvider nodes={nodes} links={links}>
-      <CosmographSearch className="" />
+      <CosmographSearch
+        accessors={[
+          {
+            label: "title",
+            accessor: (node: Node) => node.metadata?.title || "",
+          },
+          {
+            label: "description",
+            accessor: (node: Node) => node.metadata?.description || "",
+          },
+        ]}
+        maxVisibleItems={5}
+      />
       <Cosmograph
-        nodeSize={0.8}
+        nodeSize={1}
         linkWidth={1}
         hoveredNodeRingColor={"red"}
         focusedNodeRingColor={"yellow"}
         style={{ width: "100%", height: "100vh" }}
-        simulationFriction={0.1}
-        simulationLinkSpring={0.2}
-        simulationRepulsion={1.0}
-        simulationLinkDistance={5.0}
-        renderLinks={false}
+        simulationFriction={0.05}
+        simulationLinkSpring={0.5}
+        simulationRepulsion={0.5}
+        simulationLinkDistance={2.0}
+        showDynamicLabels={false}
+        renderLinks={true}
         onClick={handleNodeClick}
       />
       {selectedNode && (
-        <NodeModal
+        <NodeSidePanel
           isOpen={isNodeModalOpen}
           setIsOpen={setIsNodeModalOpen}
           node={selectedNode}
