@@ -14,7 +14,7 @@ const Home = () => {
         priority
       />
       <h1 className="text-5xl font-bold mb-4">Constellation</h1>
-      <p className="text-xl mb-8">The future of Research Collaboration</p>
+      <p className="text-xl mb-8">The future of Research Colaboration</p>
       <Link href="/login">
         <Button label="Get Started" />
       </Link>

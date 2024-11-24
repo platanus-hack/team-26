@@ -1,14 +1,10 @@
 import { useState, useEffect } from "react";
 import { GraphVisualization } from "./GraphVisualization";
 import { Node, Link } from "@/app/types/graph";
-import ArticleModal from "./ArticleModal";
-import ExperimentModal from "./ExperimentModal";
 import Papa from "papaparse";
 //import withAuth from "@/app/hocs/withAuth";
 
 const GraphPage = () => {
-  const [isArticleModalOpen, setIsArticleModalOpen] = useState(false);
-  const [isExperimentModalOpen, setIsExperimentModalOpen] = useState(false);
   const [nodes, setNodes] = useState<Node[]>([]);
   const [links, setLinks] = useState<Link[]>([]);
 
@@ -77,29 +73,18 @@ const GraphPage = () => {
   }, []);
 
   return (
-    <div className="flex flex-row h-screen">
+    <div>
       {nodes.length === 0 ? (
-        <div className="flex flex-col w-full p-4 bg-gray-100 dark:bg-gray-800">
-          <h1 className="text-xl font-bold mb-4">Loading...</h1>
+        <div className="flex flex-col w-full p-4 bg-gray-100 dark:bg-[#191919]">
+          <div className="flex flex-grow items-center justify-center">
+            <h1 className="text-xl font-bold mb-4">Loading...</h1>
+          </div>
         </div>
       ) : (
         <div className="flex flex-col w-full p-0">
           <GraphVisualization nodes={nodes} links={links} />
         </div>
       )}
-
-      {isArticleModalOpen ? (
-        <ArticleModal
-          isOpen={isArticleModalOpen}
-          setIsOpen={setIsArticleModalOpen}
-        />
-      ) : null}
-      {isExperimentModalOpen ? (
-        <ExperimentModal
-          isOpen={isExperimentModalOpen}
-          setIsOpen={setIsExperimentModalOpen}
-        />
-      ) : null}
     </div>
   );
 };
