@@ -16,8 +16,9 @@ export type Metadata = {
   title: string;
   description: string;
   results: string;
-  embeding: [number, number];
   cluster: number;
+  isRepresentative: boolean;
+  category: string;
 };
 
 export type CosmosInputNode = {
@@ -25,4 +26,14 @@ export type CosmosInputNode = {
   metadata?: Metadata;
   x?: number;
   y?: number;
+};
+
+export type GraphData = {
+  id: string;
+  title: string;
+  description: string;
+  results: string;
+  cluster: string;
+  is_representative: boolean;
+  category: string;
 };

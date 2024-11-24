@@ -40,9 +40,9 @@ const Login = () => {
       <h1 className="text-5xl">Login</h1>
       <form onSubmit={handleLogin} className="flex flex-col gap-4">
         <div>
-          <label htmlFor="username">Username</label>
+          <label htmlFor="email">Email</label>
           <Input
-            id="username"
+            id="email"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />

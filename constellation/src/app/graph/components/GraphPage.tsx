@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { GraphVisualization } from "./GraphVisualization";
-import { Node, Link } from "@/app/types/graph";
-import Papa from "papaparse";
-import withAuth from "@/app/hocs/withAuth";
+import { Node, Link, GraphData } from "@/app/types/graph";
 import useAuth from "@/app/hooks/useAuth";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
+import axiosInstance from "@/app/lib/axios";
 
 const GraphPage = () => {
   const [nodes, setNodes] = useState<Node[]>([]);
@@ -12,64 +11,38 @@ const GraphPage = () => {
   const { logout } = useAuth();
 
   useEffect(() => {
-    const fetchCSVData = async () => {
-      const response = await fetch("/data/cosmograph_data.csv");
-      const csvText = await response.text();
-      const parsedData = Papa.parse(csvText, {
-        header: true,
-        dynamicTyping: true,
-      });
-
-      const parsedNodes: Node[] = [];
-      const parsedLinks: Link[] = [];
-      const uniqueIds = new Set<string>();
-
-      (parsedData.data as { source: string; target: string }[]).forEach(
-        (row) => {
-          if (row.source && row.target) {
-            parsedLinks.push({ source: row.source, target: row.target });
-
-            if (!uniqueIds.has(row.source)) {
-              parsedNodes.push({ id: row.source });
-              uniqueIds.add(row.source);
-            }
-            if (!uniqueIds.has(row.target)) {
-              parsedNodes.push({ id: row.target });
-              uniqueIds.add(row.target);
-            }
-          }
-        }
-      );
-
-      setNodes(parsedNodes);
-      setLinks(parsedLinks);
-    };
-
-    const fetchJSONData = async () => {
-      const response = await fetch("/data/metadata.json");
-      const jsonData: Node[] = await response.json();
-
-      setNodes((prevNodes) => {
-        const updatedNodes = [...prevNodes];
-
-        jsonData.forEach((newNode) => {
-          const existingNode = updatedNodes.find(
-            (node) => node.id === newNode.id
-          );
-          if (existingNode) {
-            existingNode.metadata = newNode.metadata; // Merge metadata
-          } else {
-            updatedNodes.push(newNode); // Add new node if it doesn't exist
-          }
-        });
-
-        return updatedNodes;
-      });
-    };
-
     const fetchData = async () => {
-      await fetchCSVData();
-      await fetchJSONData();
+      try {
+        const response = await axiosInstance.get("/knowledge/knowledge-graph");
+        const { cosmograph_data, metadata } = response.data;
+
+        // Parse links
+        const parsedLinks: Link[] = cosmograph_data.map(
+          (link: { source: string; target: string }) => ({
+            source: link.source,
+            target: link.target,
+          })
+        );
+
+        // Parse nodes from metadata and enrich with metadata properties
+
+        const parsedNodes: Node[] = metadata.map((meta: GraphData) => ({
+          id: meta.id,
+          metadata: {
+            title: meta.title,
+            description: meta.description,
+            results: meta.results,
+            cluster: meta.cluster,
+            isRepresentative: meta.is_representative,
+            category: meta.category,
+          },
+        }));
+
+        setNodes(parsedNodes);
+        setLinks(parsedLinks);
+      } catch (error) {
+        console.error("Error fetching knowledge graph data:", error);
+      }
     };
 
     fetchData();
@@ -90,7 +63,7 @@ const GraphPage = () => {
       )}
       <button
         onClick={logout}
-        className="fixed top-4 right-4 p-2 bg-red-500 text-white rounded-md z-40 hover:bg-red-600"
+        className="absolute top-4 right-4 p-2 bg-red-500 text-white rounded-md z-30 hover:bg-red-600"
       >
         <LogoutRoundedIcon />
       </button>
@@ -98,4 +71,4 @@ const GraphPage = () => {
   );
 };
 
-export default withAuth(GraphPage);
+export default GraphPage;

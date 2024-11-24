@@ -46,7 +46,6 @@ export function GraphVisualization({
     if (clickedNode) {
       setIsNodeModalOpen(true);
       setSelectedNode(clickedNode);
-      cosmographRef.current?.setZoomLevel(40, 500);
     }
   };
 
@@ -103,8 +102,8 @@ export function GraphVisualization({
           nodeLabelClassName="flex text-white rounded-xl p-1"
           nodeLabelAccessor={(node: Node) => node.metadata?.title || "No Title"}
           hoveredNodeRingColor={"red"}
-          showLabelsFor={nodes.filter((node) =>
-            node.id.startsWith("Centroid_")
+          showLabelsFor={nodes.filter(
+            (node) => node.metadata?.isRepresentative
           )}
           style={{ width: "100%", height: "100vh" }}
           simulationFriction={0.03}

@@ -1,6 +1,7 @@
 "use client";
 import { Node } from "@/app/types/graph";
 import { useState } from "react";
+import NodeSidePanel from "./NodeSidePanel";
 
 interface CardsModeProps {
   nodes: Node[];
@@ -8,14 +9,20 @@ interface CardsModeProps {
 
 const CardsMode = ({ nodes }: CardsModeProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+
+  const handleNodeClick = (node: Node) => {
+    setSelectedNode(node);
+    setSidebarOpen(true);
+  };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-6 mt-12">
+    <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 p-4 mt-12">
       {nodes.map((node) => (
         <div
           key={node.id}
-          className="flex flex-col shadow-md hover:shadow-lg transition-shadow p-6 rounded-lg bg-[#f9f9f9]"
-          onClick={() => setSidebarOpen(true)}
+          className="mb-4 break-inside-avoid shadow-md hover:shadow-lg transition-shadow p-6 rounded-lg bg-[#f9f9f9]"
+          onClick={() => handleNodeClick(node)}
         >
           <h2 className="text-lg font-bold text-gray-800 truncate">
             {node.metadata?.title}
@@ -36,8 +43,12 @@ const CardsMode = ({ nodes }: CardsModeProps) => {
           </div>
         </div>
       ))}
-      {sidebarOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50"></div>
+      {sidebarOpen && selectedNode && (
+        <NodeSidePanel
+          isOpen={sidebarOpen}
+          setIsOpen={setSidebarOpen}
+          node={selectedNode}
+        />
       )}
     </div>
   );
