@@ -4,7 +4,7 @@ import {
   Cosmograph,
   CosmographRef,
 } from "@cosmograph/react";
-import { Node, Link } from "@/app/types/graph";
+import { Node, Link, GraphData } from "@/app/types/graph";
 import { useRef, useState } from "react";
 import NodeSidePanel from "./NodeSidePanel";
 import InputBar from "./InputBar";
@@ -13,6 +13,7 @@ import AccountTreeRoundedIcon from "@mui/icons-material/AccountTreeRounded";
 import FormatListBulletedRoundedIcon from "@mui/icons-material/FormatListBulleted";
 import Switch from "@/app/components/ui/Switch";
 import CardsMode from "./CardsMode";
+import axiosInstance from "@/app/lib/axios";
 
 const goldenRatioConjugate = 0.618033988749895;
 
@@ -29,9 +30,13 @@ const getNodeColor = (node: Node) => {
 export function GraphVisualization({
   nodes,
   links,
+  setNodes,
+  setLinks,
 }: {
   nodes: Node[];
   links: Link[];
+  setNodes: (nodes: Node[]) => void;
+  setLinks: (links: Link[]) => void;
 }) {
   const [isNodeModalOpen, setIsNodeModalOpen] = useState(false);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
@@ -49,9 +54,41 @@ export function GraphVisualization({
     }
   };
 
-  const handleSendInput = () => {
-    console.log("Input:", search);
-    setInputSent(true);
+  const handleSendInput = async () => {
+    try {
+      const response = await axiosInstance.post("/knowledge/search", {
+        query: input,
+      });
+      const { cosmograph_data, metadata } = response.data;
+
+      // Parse links
+      const parsedLinks: Link[] = cosmograph_data.map(
+        (link: { source: string; target: string }) => ({
+          source: link.source,
+          target: link.target,
+        })
+      );
+
+      // Parse nodes from metadata and enrich with metadata properties
+
+      const parsedNodes: Node[] = metadata.map((meta: GraphData) => ({
+        id: meta.id,
+        metadata: {
+          title: meta.title,
+          description: meta.description,
+          results: meta.results,
+          cluster: meta.cluster,
+          isRepresentative: meta.is_representative,
+          category: meta.category,
+        },
+      }));
+
+      setNodes(parsedNodes);
+      setLinks(parsedLinks);
+      setInputSent(true);
+    } catch (error) {
+      console.error("Error sending input:", error);
+    }
   };
 
   const handleSendSearch = () => {

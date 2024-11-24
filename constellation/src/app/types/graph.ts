@@ -19,6 +19,7 @@ export type Metadata = {
   cluster: number;
   isRepresentative: boolean;
   category: string;
+  scrore?: number;
 };
 
 export type CosmosInputNode = {
@@ -36,4 +37,5 @@ export type GraphData = {
   cluster: string;
   is_representative: boolean;
   category: string;
+  score?: number;
 };

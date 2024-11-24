@@ -58,7 +58,12 @@ const GraphPage = () => {
         </div>
       ) : (
         <div className="flex flex-col w-full p-0">
-          <GraphVisualization nodes={nodes} links={links} />
+          <GraphVisualization
+            nodes={nodes}
+            links={links}
+            setNodes={setNodes}
+            setLinks={setLinks}
+          />
         </div>
       )}
       <button
