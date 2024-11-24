@@ -24,7 +24,7 @@ const useAuth = () => {
   ): Promise<boolean> => {
     try {
       const response = await axios.post(
-        process.env.NEXT_PUBLIC_API_URL + "users/login/",
+        process.env.NEXT_PUBLIC_API_URL + "users/login",
         {
           username: loginUsername,
           password,

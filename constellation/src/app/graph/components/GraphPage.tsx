@@ -2,11 +2,14 @@ import { useState, useEffect } from "react";
 import { GraphVisualization } from "./GraphVisualization";
 import { Node, Link } from "@/app/types/graph";
 import Papa from "papaparse";
-//import withAuth from "@/app/hocs/withAuth";
+import withAuth from "@/app/hocs/withAuth";
+import useAuth from "@/app/hooks/useAuth";
+import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 
 const GraphPage = () => {
   const [nodes, setNodes] = useState<Node[]>([]);
   const [links, setLinks] = useState<Link[]>([]);
+  const { logout } = useAuth();
 
   useEffect(() => {
     const fetchCSVData = async () => {
@@ -85,8 +88,14 @@ const GraphPage = () => {
           <GraphVisualization nodes={nodes} links={links} />
         </div>
       )}
+      <button
+        onClick={logout}
+        className="fixed top-4 right-4 p-2 bg-red-500 text-white rounded-md z-40 hover:bg-red-600"
+      >
+        <LogoutRoundedIcon />
+      </button>
     </div>
   );
 };
 
-export default GraphPage;
+export default withAuth(GraphPage);
