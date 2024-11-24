@@ -9,7 +9,7 @@ const Home = () => {
         src="logo.svg"
         width={200}
         height={200}
-        alt={"tensor logo"}
+        alt={"constellation logo"}
         className="h-32 w-auto mb-8"
         priority
       />

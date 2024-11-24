@@ -15,7 +15,7 @@ const Login = () => {
 
   useEffect(() => {
     if (isAuthenticated()) {
-      router.push("/pipelines");
+      router.push("/graph");
     }
   }, [isAuthenticated]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -23,7 +23,7 @@ const Login = () => {
     e.preventDefault();
     const success: boolean = await login(username, password, setError);
     if (success) {
-      router.push("/pipelines");
+      router.push("/graph");
     }
   };
 
@@ -33,7 +33,7 @@ const Login = () => {
         src="logo.svg"
         width={200}
         height={200}
-        alt={"tensor logo"}
+        alt={"constellation logo"}
         className="h-32 w-auto"
         priority
       />

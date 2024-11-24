@@ -40,7 +40,7 @@ const Register = () => {
       setError("Passwords do not match.");
       return;
     }
-    const url = process.env.NEXT_PUBLIC_API_URL + "user/register/";
+    const url = process.env.NEXT_PUBLIC_API_URL + "users/signup";
     console.log(url);
     try {
       await axios.post(url, {
@@ -66,7 +66,7 @@ const Register = () => {
         src="logo.svg"
         width={200}
         height={200}
-        alt={"tensor logo"}
+        alt={"constellation logo"}
         className="h-32 w-auto"
         priority
       />
